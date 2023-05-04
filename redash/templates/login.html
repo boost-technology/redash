@@ -21,9 +21,9 @@
     {% endif %}
 
     {% if show_oauth_login %}
-      <a href="{{ google_auth_url }}" class="login-button btn btn-default btn-block">
-        <img src="/static/images/google_logo.svg">
-        Login with Google
+      <a href="{{ auth_oauth_url }}" class="login-button btn btn-default btn-block">
+        <img src="{{ auth_oauth_image_url }}">
+        Login with {{ auth_oauth_name }}
       </a>
     {% endif %}
 

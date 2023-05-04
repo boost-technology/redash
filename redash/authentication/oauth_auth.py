@@ -23,7 +23,7 @@ def verify_profile(org, profile):
     email = profile["email"]
     domain = email.split("@")[-1]
 
-    if domain in org.google_apps_domains:
+    if domain in org.auth_oauth_domains:
         return True
 
     if org.has_user(email) == 1:
@@ -38,19 +38,25 @@ def create_oauth_blueprint(app):
     logger = logging.getLogger("oauth")
     blueprint = Blueprint("oauth", __name__)
 
-    CONF_URL = "https://accounts.google.com/.well-known/openid-configuration"
+    CONF_URL = current_org.get_setting("auth_oauth_url")
+    CONF_NAME = current_org.get_setting('auth_oauth_name')
     oauth = OAuth(app)
     oauth.register(
-        name="google",
+        name=CONF_NAME,
         server_metadata_url=CONF_URL,
         client_kwargs={"scope": "openid email profile"},
     )
 
     def get_user_profile(access_token):
         headers = {"Authorization": "OAuth {}".format(access_token)}
-        response = requests.get(
-            "https://www.googleapis.com/oauth2/v1/userinfo", headers=headers
-        )
+
+        try:
+            userinfo_endpoint = requests.get(CONF_URL).json()["userinfo_endpoint"]
+        except Exception:
+            logger.warning("Failed getting userinfo endpoint")
+            return None
+
+        response = requests.get(userinfo_endpoint, headers=headers)
 
         if response.status_code == 401:
             logger.warning("Failed getting user profile (response code 401).")
@@ -58,12 +64,12 @@ def create_oauth_blueprint(app):
 
         return response.json()
 
-    @blueprint.route("/<org_slug>/oauth/google", endpoint="authorize_org")
+    @blueprint.route(f"/<org_slug>/oauth/{CONF_NAME}", endpoint="authorize_org")
     def org_login(org_slug):
         session["org_slug"] = current_org.slug
         return redirect(url_for(".authorize", next=request.args.get("next", None)))
 
-    @blueprint.route("/oauth/google", endpoint="authorize")
+    @blueprint.route(f"/oauth/{CONF_NAME}", endpoint="authorize")
     def login():
 
         redirect_uri = url_for(".callback", _external=True)

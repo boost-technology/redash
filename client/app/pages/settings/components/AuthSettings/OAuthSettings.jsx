@@ -44,6 +44,12 @@ export default function OAuthSettings(props) {
                   onChange={e => onChange({ auth_oauth_name: e.target.value })}
                 />
               </Form.Item>
+              <Form.Item label="OAuth Image URL">
+                <Input
+                  value={values.auth_oauth_image_url}
+                  onChange={e => onChange({ auth_oauth_image_url: e.target.value })}
+                />
+              </Form.Item>
               <Form.Item label="OAuth URL">
                 <Input
                   value={values.auth_oauth_url}

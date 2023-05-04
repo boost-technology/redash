@@ -265,7 +265,7 @@ def init_app(app):
     # Authlib's flask oauth client requires a Flask app to initialize
     for blueprint in [
         create_google_oauth_blueprint(app),
-        create_oauth_blueprint(app),
+        create_oauth_blueprint(current_org, app),
         saml_auth.blueprint,
         remote_user_auth.blueprint,
         ldap_auth.blueprint,
