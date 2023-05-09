@@ -13,8 +13,6 @@ os.environ["RQ_REDIS_URL"] = os.environ.get(
 ).replace("/5", "/6")
 
 # Dummy values for oauth login
-os.environ["REDASH_GOOGLE_CLIENT_ID"] = "dummy"
-os.environ["REDASH_GOOGLE_CLIENT_SECRET"] = "dummy"
 os.environ["REDASH_MULTI_ORG"] = "true"
 
 # Dummy values for openid oauth login

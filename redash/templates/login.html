@@ -13,13 +13,6 @@
       {% endif %}
     {% endwith %}
 
-    {% if show_google_openid %}
-      <a href="{{ google_auth_url }}" class="login-button btn btn-default btn-block">
-        <img src="/static/images/google_logo.svg">
-        Login with Google
-      </a>
-    {% endif %}
-
     {% if show_oauth_login %}
       <a href="{{ auth_oauth_url }}" class="login-button btn btn-default btn-block">
         <img src="{{ auth_oauth_image_url }}">
@@ -40,7 +33,7 @@
     {% endif %}
 
     {% if show_password_login %}
-    {% if show_google_openid or show_saml_login or show_remote_user_login or show_ldap_login or show_oauth_login %}
+    {% if show_saml_login or show_remote_user_login or show_ldap_login or show_oauth_login %}
       <hr>
     {% endif %}
 

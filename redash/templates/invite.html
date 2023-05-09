@@ -6,7 +6,7 @@
 <div class="fixed-width-page">
   <div class="bg-white tiled">
     <div class="m-b-25">
-      {% if show_google_openid or show_saml_login or show_remote_user_login or show_ldap_login or show_oauth_login %}
+      {% if show_saml_login or show_remote_user_login or show_ldap_login or show_oauth_login %}
         To create your account, please choose a password or login with your SSO provider.
       {% else %}
         To create your account, please choose a password.
@@ -20,13 +20,6 @@
         {% endfor %}
       {% endif %}
     {% endwith %}
-
-    {% if show_google_openid %}
-      <a href="{{ google_auth_url }}" class="login-button btn btn-default btn-block">
-        <img src="/static/images/google_logo.svg">
-        Login with Google
-      </a>
-    {% endif %}
 
     {% if show_oauth_login %}
     <a href="{{ auth_oauth_url }}" class="login-button btn btn-default btn-block">
@@ -47,7 +40,7 @@
       <a href="{{ url_for('ldap_auth.login') }}" class="login-button btn btn-default btn-block">LDAP/SSO Login</a>
     {% endif %}
 
-    {% if show_google_openid or show_saml_login or show_remote_user_login or show_ldap_login or show_oauth_login %}
+    {% if show_saml_login or show_remote_user_login or show_ldap_login or show_oauth_login %}
       <hr>
     {% endif %}
 
