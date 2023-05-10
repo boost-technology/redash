@@ -4,10 +4,10 @@
   "description": "The frontend part of Redash.",
   "main": "index.js",
   "scripts": {
-    "start": "export SET NODE_OPTIONS=--openssl-legacy-provider && npm-run-all --parallel watch:viz webpack-dev-server",
+    "start": "npm-run-all --parallel watch:viz webpack-dev-server",
     "clean": "rm -rf ./client/dist/",
     "build:viz": "(cd viz-lib && yarn build:babel)",
-    "build": "export SET NODE_OPTIONS=--openssl-legacy-provider && yarn clean && yarn build:viz && NODE_ENV=production webpack",
+    "build": "yarn clean && yarn build:viz && NODE_ENV=production webpack",
     "build:old-node-version": "yarn clean && NODE_ENV=production node --max-old-space-size=4096 node_modules/.bin/webpack",
     "watch:app": "webpack --watch --progress --colors -d",
     "watch:viz": "(cd viz-lib && yarn watch:babel)",
@@ -32,6 +32,10 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/getredash/redash.git"
+  },
+  "engines": {
+    "node": ">14.16.0 <17.0.0",
+    "yarn": "^1.22.10"
   },
   "author": "Redash Contributors",
   "license": "BSD-2-Clause",
