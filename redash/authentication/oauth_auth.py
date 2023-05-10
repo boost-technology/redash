@@ -18,16 +18,18 @@ blueprint = Blueprint("oauth", __name__)
 
 def get_oauth_client(app):
     oauth = OAuth(app)
-    if not oauth[CONF_NAME]:
-        CONF_URL = current_org.get_setting("auth_oauth_url")
-        CONF_NAME = current_org.get_setting('auth_oauth_name')
+    CONF_URL = current_org.get_setting("auth_oauth_url")
+    CONF_NAME = current_org.get_setting('auth_oauth_name')
+    try:
+        getattr(oauth, CONF_NAME)
+    except AttributeError:
         oauth = OAuth(app)
         oauth.register(
             name=CONF_NAME,
             server_metadata_url=CONF_URL,
             client_kwargs={"scope": "openid email profile"},
         )
-    return oauth[CONF_NAME]  # might need to change this to dot notation
+    return getattr(oauth, CONF_NAME)  # might need to change this to dot notation
 
 
 def verify_profile(org, profile):

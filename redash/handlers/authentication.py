@@ -85,7 +85,7 @@ def render_token_login_page(template, org_slug, token, invite):
         render_template(
             template,
             show_oauth_login=current_org.get_setting("auth_oauth_enabled"),
-            auth_oauth_url=current_org.get_setting("auth_oauth_url"),
+            auth_oauth_url=url_for("oauth.authorize"),
             auth_oauth_name=current_org.get_setting("auth_oauth_name"),
             auth_oauth_image_url=current_org.get_setting("auth_oauth_image_url"),
             show_saml_login=current_org.get_setting("auth_saml_enabled"),
@@ -214,7 +214,7 @@ def login(org_slug=None):
         next=next_path,
         email=request.form.get("email", ""),
         show_oauth_login=current_org.get_setting("auth_oauth_enabled"),
-        auth_oauth_url=current_org.get_setting("auth_oauth_url"),
+        auth_oauth_url= url_for("oauth.authorize"),
         auth_oauth_name=current_org.get_setting("auth_oauth_name"),
         auth_oauth_image_url=current_org.get_setting("auth_oauth_image_url"),
         show_password_login=current_org.get_setting("auth_password_login_enabled"),
