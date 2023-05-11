@@ -13,8 +13,6 @@ OAUTH_ENABLED = parse_boolean(os.environ.get("OAUTH_ENABLED", "true"))
 OAUTH_NAME = os.environ.get("OAUTH_NAME", "")
 OAUTH_IMAGE_URL = os.environ.get("OAUTH_IMAGE_URL", "")
 OAUTH_URL = os.environ.get("OAUTH_URL", "")
-OAUTH_CLIENT_ID = os.environ.get("OAUTH_CLIENT_ID", "")
-OAUTH_CLIENT_SECRET = os.environ.get("OAUTH_CLIENT_SECRET", "")
 OAUTH_DOMAINS = os.environ.get("OAUTH_DOMAINS", "")
 
 PASSWORD_LOGIN_ENABLED = parse_boolean(
@@ -68,8 +66,6 @@ settings = {
     "auth_oauth_name": OAUTH_NAME,
     "auth_oauth_image_url": OAUTH_IMAGE_URL,
     "auth_oauth_url": OAUTH_URL,
-    "auth_oauth_client_id": OAUTH_CLIENT_ID,
-    "auth_oauth_client_secret": OAUTH_CLIENT_SECRET,
     "auth_oauth_domains": OAUTH_DOMAINS,
     "auth_password_login_enabled": PASSWORD_LOGIN_ENABLED,
     "auth_saml_enabled": SAML_LOGIN_ENABLED,
