@@ -25,7 +25,6 @@ def get_oauth_client(app):
         f'{CONF_NAME.upper()}_CLIENT_ID': current_org.get_setting('auth_oauth_client_id'),
         f'{CONF_NAME.upper()}_CLIENT_SECRET': current_org.get_setting('auth_oauth_client_secret'),
     }
-    print('client data', client_data)
     try:
         getattr(oauth, CONF_NAME)
     except AttributeError:
@@ -36,7 +35,7 @@ def get_oauth_client(app):
             client_kwargs={"scope": "openid email profile"},
             **client_data,
         )
-    return getattr(oauth, CONF_NAME)  # might need to change this to dot notation
+    return getattr(oauth, CONF_NAME)
 
 
 def verify_profile(org, profile):
