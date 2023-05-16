@@ -22,8 +22,8 @@ def get_oauth_client(app):
     CONF_NAME = current_org.get_setting('auth_oauth_name')
 
     client_data = {
-        f'{CONF_NAME.upper()}_CLIENT_ID': current_org.get_setting('auth_oauth_client_id'),
-        f'{CONF_NAME.upper()}_CLIENT_SECRET': current_org.get_setting('auth_oauth_client_secret'),
+        'client_id': current_org.get_setting('auth_oauth_client_id'),
+        'client_secret': current_org.get_setting('auth_oauth_client_secret'),
     }
     try:
         getattr(oauth, CONF_NAME)
@@ -45,7 +45,10 @@ def verify_profile(org, profile):
     email = profile["email"]
     domain = email.split("@")[-1]
 
-    if domain in org.auth_oauth_domains:
+    if domains := org.get_setting("auth_oauth_domains"):
+        if domain in domains:
+            return True
+    else:
         return True
 
     if org.has_user(email) == 1:
