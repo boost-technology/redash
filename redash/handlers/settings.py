@@ -20,7 +20,7 @@ def get_settings_with_defaults(defaults, org):
         else:
             settings[setting] = current_value
 
-    settings["auth_google_apps_domains"] = org.google_apps_domains
+    settings["auth_oauth_domains"] = org.oauth_domains
 
     return settings
 
@@ -41,9 +41,9 @@ class OrganizationSettings(BaseResource):
 
         previous_values = {}
         for k, v in new_values.items():
-            if k == "auth_google_apps_domains":
-                previous_values[k] = self.current_org.google_apps_domains
-                self.current_org.settings[Organization.SETTING_GOOGLE_APPS_DOMAINS] = v
+            if k == "auth_oauth_domains":
+                previous_values[k] = self.current_org.oauth_domains
+                self.current_org.settings[Organization.SETTING_OAUTH_DOMAINS] = v
             else:
                 previous_values[k] = self.current_org.get_setting(
                     k, raise_on_missing=False

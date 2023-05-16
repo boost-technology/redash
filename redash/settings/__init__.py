@@ -167,10 +167,6 @@ FEATURE_POLICY = os.environ.get("REDASH_REFERRER_POLICY", "")
 
 MULTI_ORG = parse_boolean(os.environ.get("REDASH_MULTI_ORG", "false"))
 
-GOOGLE_CLIENT_ID = os.environ.get("REDASH_GOOGLE_CLIENT_ID", "")
-GOOGLE_CLIENT_SECRET = os.environ.get("REDASH_GOOGLE_CLIENT_SECRET", "")
-GOOGLE_OAUTH_ENABLED = bool(GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET)
-
 # If Redash is behind a proxy it might sometimes receive a X-Forwarded-Proto of HTTP
 # even if your actual Redash URL scheme is HTTPS. This will cause Flask to build
 # the SAML redirect URL incorrect thus failing auth. This is especially common if
@@ -261,7 +257,7 @@ JOB_DEFAULT_FAILURE_TTL = int(
 )
 
 LOG_LEVEL = os.environ.get("REDASH_LOG_LEVEL", "INFO")
-LOG_STDOUT = parse_boolean(os.environ.get("REDASH_LOG_STDOUT", "false"))
+LOG_STDOUT = parse_boolean(os.environ.get("REDASH_LOG_STDOUT", "true"))
 LOG_PREFIX = os.environ.get("REDASH_LOG_PREFIX", "")
 LOG_FORMAT = os.environ.get(
     "REDASH_LOG_FORMAT",

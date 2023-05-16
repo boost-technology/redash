@@ -5,7 +5,7 @@ import { clientConfig } from "@/services/auth";
 import { SettingsEditorPropTypes, SettingsEditorDefaultProps } from "../prop-types";
 
 import PasswordLoginSettings from "./PasswordLoginSettings";
-import GoogleLoginSettings from "./GoogleLoginSettings";
+import OAuthSettings from "./OAuthSettings";
 import SAMLSettings from "./SAMLSettings";
 
 export default function AuthSettings(props) {
@@ -14,7 +14,7 @@ export default function AuthSettings(props) {
     changes => {
       const allSettings = { ...values, ...changes };
       const allAuthMethodsDisabled =
-        !clientConfig.googleLoginEnabled && !clientConfig.ldapLoginEnabled && !allSettings.auth_saml_enabled;
+        !clientConfig.ldapLoginEnabled && !allSettings.auth_saml_enabled && !allSettings.auth_oauth_enabled;
       if (allAuthMethodsDisabled) {
         changes = { ...changes, auth_password_login_enabled: true };
       }
@@ -30,8 +30,8 @@ export default function AuthSettings(props) {
       </h3>
       <hr />
       <PasswordLoginSettings {...props} onChange={handleChange} />
-      <GoogleLoginSettings {...props} onChange={handleChange} />
       <SAMLSettings {...props} onChange={handleChange} />
+      <OAuthSettings {...props} onChange={handleChange} />
     </DynamicComponent>
   );
 }

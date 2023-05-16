@@ -28,22 +28,22 @@ class TestOrganizationSettings(BaseTestCase):
             updated_org.settings["settings"]["auth_password_login_enabled"], True
         )
 
-    def test_updates_google_apps_domains(self):
+    def test_updates_oauth_domains(self):
         admin = self.factory.create_admin()
         domains = ["example.com"]
         rv = self.make_request(
             "post",
             "/api/settings/organization",
-            data={"auth_google_apps_domains": domains},
+            data={"auth_oauth_domains": domains},
             user=admin,
         )
         updated_org = Organization.get_by_slug(self.factory.org.slug)
-        self.assertEqual(updated_org.google_apps_domains, domains)
+        self.assertEqual(updated_org.oauth_domains, domains)
 
-    def test_get_returns_google_appas_domains(self):
+    def test_get_returns_oauth_domains(self):
         admin = self.factory.create_admin()
         domains = ["example.com"]
-        admin.org.settings[Organization.SETTING_GOOGLE_APPS_DOMAINS] = domains
+        admin.org.settings[Organization.SETTING_OAUTH_DOMAINS] = domains
 
         rv = self.make_request("get", "/api/settings/organization", user=admin)
-        self.assertEqual(rv.json["settings"]["auth_google_apps_domains"], domains)
+        self.assertEqual(rv.json["settings"]["auth_oauth_domains"], domains)
