@@ -257,7 +257,7 @@ JOB_DEFAULT_FAILURE_TTL = int(
 )
 
 LOG_LEVEL = os.environ.get("REDASH_LOG_LEVEL", "INFO")
-LOG_STDOUT = parse_boolean(os.environ.get("REDASH_LOG_STDOUT", "false"))
+LOG_STDOUT = parse_boolean(os.environ.get("REDASH_LOG_STDOUT", "true"))
 LOG_PREFIX = os.environ.get("REDASH_LOG_PREFIX", "")
 LOG_FORMAT = os.environ.get(
     "REDASH_LOG_FORMAT",

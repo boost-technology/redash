@@ -333,30 +333,30 @@ class GroupCommandTests(BaseTestCase):
 
 
 class OrganizationCommandTests(BaseTestCase):
-    def test_set_google_apps_domains(self):
+    def test_set_oauth_domains(self):
         domains = ["example.org", "example.com"]
         runner = CliRunner()
         result = runner.invoke(
-            manager, ["org", "set_google_apps_domains", ",".join(domains)]
+            manager, ["org", "set_oauth_domains", ",".join(domains)]
         )
         self.assertFalse(result.exception)
         self.assertEqual(result.exit_code, 0)
         db.session.add(self.factory.org)
-        self.assertEqual(self.factory.org.google_apps_domains, domains)
+        self.assertEqual(self.factory.org.oauth_domains, domains)
 
-    def test_show_google_apps_domains(self):
-        self.factory.org.settings[Organization.SETTING_GOOGLE_APPS_DOMAINS] = [
+    def test_show_oauth_domains(self):
+        self.factory.org.settings[Organization.SETTING_OAUTH_DOMAINS] = [
             "example.org",
             "example.com",
         ]
         db.session.add(self.factory.org)
         db.session.commit()
         runner = CliRunner()
-        result = runner.invoke(manager, ["org", "show_google_apps_domains"])
+        result = runner.invoke(manager, ["org", "show_oauth_domains"])
         self.assertFalse(result.exception)
         self.assertEqual(result.exit_code, 0)
         output = """
-        Current list of Google Apps domains: example.org, example.com
+        Current list of OAuth domains: example.org, example.com
         """
         self.assertMultiLineEqual(result.output, textwrap.dedent(output).lstrip())
 
@@ -424,11 +424,11 @@ class UserCommandTests(BaseTestCase):
         self.assertTrue(u.verify_password("password1"))
         self.assertEqual(u.group_ids, [u.org.default_group.id, u.org.admin_group.id])
 
-    def test_create_googleauth(self):
+    def test_create_oauthauth(self):
         runner = CliRunner()
         result = runner.invoke(
             manager,
-            ["users", "create", "foobar@example.com", "Fred Foobar", "--google"],
+            ["users", "create", "foobar@example.com", "Fred Foobar", "--oauth"],
         )
         self.assertFalse(result.exception)
         self.assertEqual(result.exit_code, 0)

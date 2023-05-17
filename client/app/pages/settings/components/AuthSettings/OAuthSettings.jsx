@@ -21,6 +21,23 @@ export default function OAuthSettings(props) {
     onChange(updates);
   };
 
+  const onChangeOAuthProvider = e => {
+    const updates = { auth_oauth_name : e.target.value };
+    switch(e.target.value) {
+      case 'google':
+        updates.auth_oauth_url = 'https://accounts.google.com/.well-known/openid-configuration';
+        updates.auth_oauth_image_url = 'https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg';
+        break;
+      case 'microsoft':
+        updates.auth_oauth_url = 'https://login.microsoftonline.com/common/v2.0/.well-known/openid-configuration';
+        updates.auth_oauth_image_url = 'https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg';
+        break;
+      default:
+        updates.auth_oauth_url = '';
+    }
+    onChange(updates);
+  }
+
   return (
     <DynamicComponent name="OrganizationSettings.OAuthSettings" {...props}>
       <h4>OAuth</h4>
@@ -38,24 +55,40 @@ export default function OAuthSettings(props) {
       </Form.Item>
         {values.auth_oauth_enabled && (
             <>
-              <Form.Item label="OAuth Provider Name">
-                <Input
-                  value={values.auth_oauth_name}
-                  onChange={e => onChange({ auth_oauth_name: e.target.value })}
-                />
+              <Form.Item label="OAuth Provider">
+                <Radio.Group
+                  onChange={onChangeOAuthProvider}
+                  value={['google', 'microsoft'].includes(values.auth_oauth_name) ? values.auth_oauth_name : 'custom'}>
+                  <Radio value={'google'}>Google</Radio>
+                  <Radio value={'microsoft'}>Microsoft</Radio>
+                  <Radio value={'custom'}>Custom Provider</Radio>
+                </Radio.Group>
               </Form.Item>
-              <Form.Item label="OAuth Image URL">
-                <Input
-                  value={values.auth_oauth_image_url}
-                  onChange={e => onChange({ auth_oauth_image_url: e.target.value })}
-                />
-              </Form.Item>
-              <Form.Item label="OAuth URL">
-                <Input
-                  value={values.auth_oauth_url}
-                  onChange={e => onChange({ auth_oauth_url: e.target.value })}
-                />
-              </Form.Item>
+
+              { !['google', 'microsoft'].includes(values.auth_oauth_name) ?
+                <>
+                <Form.Item label="OAuth Provider Name">
+                  <Input
+                      value={values.auth_oauth_name}
+                      onChange={e => onChange({ auth_oauth_name: e.target.value })}
+                  />
+                </Form.Item>
+                <Form.Item label="OAuth Provider Icon URI">
+                  <Input
+                    value={values.auth_oauth_image_url}
+                    placeholder={"e.g. https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"}
+                    onChange={e => onChange({ auth_oauth_image_url: e.target.value })}
+                  />
+                </Form.Item>
+                <Form.Item label="OpenID Well-known URI">
+                  <Input
+                    value={values.auth_oauth_url}
+                    placeholder={"e.g. https://accounts.google.com/.well-known/openid-configuration"}
+                    onChange={e => onChange({ auth_oauth_url: e.target.value })}
+                  />
+                </Form.Item>
+                </>
+              : null }
               <Form.Item label="OAuth Client ID">
                 <Input
                   value={values.auth_oauth_client_id}

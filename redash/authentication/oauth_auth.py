@@ -20,6 +20,11 @@ def get_oauth_client(app):
     oauth = OAuth(app)
     CONF_URL = current_org.get_setting("auth_oauth_url")
     CONF_NAME = current_org.get_setting('auth_oauth_name')
+
+    client_data = {
+        'client_id': current_org.get_setting('auth_oauth_client_id'),
+        'client_secret': current_org.get_setting('auth_oauth_client_secret'),
+    }
     try:
         getattr(oauth, CONF_NAME)
     except AttributeError:
@@ -28,8 +33,9 @@ def get_oauth_client(app):
             name=CONF_NAME,
             server_metadata_url=CONF_URL,
             client_kwargs={"scope": "openid email profile"},
+            **client_data,
         )
-    return getattr(oauth, CONF_NAME)  # might need to change this to dot notation
+    return getattr(oauth, CONF_NAME)
 
 
 def verify_profile(org, profile):
@@ -39,7 +45,10 @@ def verify_profile(org, profile):
     email = profile["email"]
     domain = email.split("@")[-1]
 
-    if domain in org.auth_oauth_domains:
+    if domains := org.get_setting("auth_oauth_domains"):
+        if domain in domains:
+            return True
+    else:
         return True
 
     if org.has_user(email) == 1:
@@ -73,7 +82,7 @@ def org_login(org_slug):
 
 @blueprint.route(f"/oauth/app", endpoint="authorize")
 def login():
-
+    oauth_client = get_oauth_client(app)
     redirect_uri = url_for(".callback", _external=True)
 
     next_path = request.args.get(
@@ -84,7 +93,7 @@ def login():
 
     session["next_url"] = next_path
 
-    return get_oauth_client(app).authorize_redirect(redirect_uri)
+    return oauth_client.authorize_redirect(redirect_uri)
 
 @blueprint.route("/oauth/app_callback", endpoint="callback")
 def authorized():
