@@ -20,17 +20,6 @@ from sqlalchemy.orm.exc import NoResultFound
 
 logger = logging.getLogger(__name__)
 
-
-def get_google_auth_url(next_path):
-    if settings.MULTI_ORG:
-        google_auth_url = url_for(
-            "google_oauth.authorize_org", next=next_path, org_slug=current_org.slug
-        )
-    else:
-        google_auth_url = url_for("google_oauth.authorize", next=next_path)
-    return google_auth_url
-
-
 def render_token_login_page(template, org_slug, token, invite):
     try:
         user_id = validate_token(token)
@@ -92,13 +81,13 @@ def render_token_login_page(template, org_slug, token, invite):
             models.db.session.commit()
             return redirect(url_for("redash.index", org_slug=org_slug))
 
-    google_auth_url = get_google_auth_url(url_for("redash.index", org_slug=org_slug))
-
     return (
         render_template(
             template,
-            show_google_openid=settings.GOOGLE_OAUTH_ENABLED,
-            google_auth_url=google_auth_url,
+            show_oauth_login=current_org.get_setting("auth_oauth_enabled"),
+            auth_oauth_url=url_for("oauth.authorize"),
+            auth_oauth_name=current_org.get_setting("auth_oauth_name"),
+            auth_oauth_image_url=current_org.get_setting("auth_oauth_image_url"),
             show_saml_login=current_org.get_setting("auth_saml_enabled"),
             show_remote_user_login=settings.REMOTE_USER_LOGIN_ENABLED,
             show_ldap_login=settings.LDAP_LOGIN_ENABLED,
@@ -219,16 +208,15 @@ def login(org_slug=None):
         flash("Password login is not enabled for your organization.")
 
 
-
-    google_auth_url = get_google_auth_url(next_path)
-
     return render_template(
         "login.html",
         org_slug=org_slug,
         next=next_path,
         email=request.form.get("email", ""),
-        show_google_openid=settings.GOOGLE_OAUTH_ENABLED,
-        google_auth_url=google_auth_url,
+        show_oauth_login=current_org.get_setting("auth_oauth_enabled"),
+        auth_oauth_url= url_for("oauth.authorize"),
+        auth_oauth_name=current_org.get_setting("auth_oauth_name"),
+        auth_oauth_image_url=current_org.get_setting("auth_oauth_image_url"),
         show_password_login=current_org.get_setting("auth_password_login_enabled"),
         show_saml_login=current_org.get_setting("auth_saml_enabled"),
         show_remote_user_login=settings.REMOTE_USER_LOGIN_ENABLED,
@@ -301,7 +289,6 @@ def client_config():
         "mailSettingsMissing": not settings.email_server_is_configured(),
         "dashboardRefreshIntervals": settings.DASHBOARD_REFRESH_INTERVALS,
         "queryRefreshIntervals": settings.QUERY_REFRESH_INTERVALS,
-        "googleLoginEnabled": settings.GOOGLE_OAUTH_ENABLED,
         "ldapLoginEnabled": settings.LDAP_LOGIN_ENABLED,
         "pageSize": settings.PAGE_SIZE,
         "pageSizeOptions": settings.PAGE_SIZE_OPTIONS,
